@@ -1,0 +1,2 @@
+# 2. Login to cf site via cli
+cf login -a https://api.cfsite.com/

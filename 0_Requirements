@@ -1,0 +1,4 @@
+# 0. Requirements
+## - Developer access to a Cloudfoundry installation
+## - Ubuntu (cygwin and GitBash may also work)
+## - Git CLI client

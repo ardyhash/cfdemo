@@ -1,0 +1,3 @@
+# 3. Clone some repositories (nodejs buildpack)
+git clone https://github.com/osipov/minimal-hello-world-node-js.git
+git clone https://github.com/BananaAcid/node-infopage.git

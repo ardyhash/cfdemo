@@ -1,0 +1,11 @@
+# 1. Install the cf cli tool
+## Add Key
+wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key \
+| sudo apt-key add -
+## Add repo
+echo "deb https://packages.cloudfoundry.org/debian stable main" \
+| sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+## Update
+sudo apt-get update
+## Install (v6)
+sudo apt-get install cf-cli

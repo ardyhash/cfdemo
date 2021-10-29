@@ -1,0 +1,5 @@
+# 4. Create some basic applications using different buildpacks
+## StaticFile Buildpack
+mkdir staticfile && touch staticfile/Staticfile && echo helloworld > staticfile/index.html
+## PHP Buildpack
+mkdir php && echo '<?php phpinfo(); ?>' > php/index.php
