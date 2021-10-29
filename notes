@@ -1,7 +1,0 @@
-$(# StaticFile Buildpack) mkdir staticfile && cd staticfile && touch Staticfile && echo helloworld > index.html
-$(# PHP Buildpack) mkdir php && cd php && echo '<?php phpinfo(); ?>' > index.php
-
-https://github.com/osipov/minimal-hello-world-node-js.git
-https://github.com/BananaAcid/node-infopage.git
-https://github.com/ardyhash/rdscripts.git
-https://github.com/ardyhash/cfdemo.git
