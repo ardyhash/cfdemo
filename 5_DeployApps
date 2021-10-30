@@ -1,5 +1,4 @@
 # 5. Deploy applications
-cd minimal-hello-world-node-js && cf push rdemo-node; cd ..
-cd node-infopage && cf push rdemo-node-infopage; cd ..
-cd staticfile && cf push rdemo-staticfile; cd ..
-cd php && cf push rdemo-phpinfo; cd ..
+cf push rdemo-phpinfo -p php
+cf push rdemo-staticfile -p staticfile
+cf push rdemo-node-infopage -p node-infopage
