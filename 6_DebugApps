@@ -5,3 +5,10 @@ cat minimal-hello-world-node-js/package.json
 rm minimal-hello-world-node-js/package.json
 echo '{ "main": "main.js", "scripts": { "start": "node main.js" } }' > minimal-hello-world-node-js/package.json
 cf push rdemo-node -p minimal-hello-world-node-js
+# One issue I faced while playing in the trial environment was
+# administrative restrictions. My trial environment was limited
+# to 4GB mem, 8GB disk, 400 services, 10 routes, and 20 instances
+# to we can use the following to view our utilization:
+cf apps # cf delete APPNAME
+cf services # cf delete-service SERVICEINSTANCENAME
+cf routes # cf delete-route DOMAINNAME --hostname HOSTNAME
