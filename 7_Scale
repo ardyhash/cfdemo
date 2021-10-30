@@ -1,0 +1,15 @@
+# 7. Scale Application
+## Failure to scale
+cf scale rdemo-node -i 22
+cf scale rdemo-node -m 5G
+cf scale rdemo-node -k 10G
+## Vertical scaling down
+cf scale rdemo-node -m 64M -k 100M -f
+cf scale rdemo-phpinfo -m 64M -k 256M -f
+cf scale rdemo-staticfile -m 64M -k 100M -f
+cf scale rdemo-node-infopage -m 64M -k 100M -f
+## Horizontal scale up
+cf scale rdemo-node -i 5
+cf scale rdemo-phpinfo -i 5
+cf scale rdemo-staticfile -i 5
+cf scale rdemo-node-infopage -i 5
