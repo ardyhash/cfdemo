@@ -1,9 +1,7 @@
 # 6. Debug Applications
 cf apps
 cf logs rdemo-node --recent
-cd minimal-hello-world-node-js
-ls
-cat package.json
-rm package.json
-echo '{ "main": "main.js", "scripts": { "start": "node main.js" } }' > package.json
-cf push rdemo-node
+cat minimal-hello-world-node-js/package.json
+rm minimal-hello-world-node-js/package.json
+echo '{ "main": "main.js", "scripts": { "start": "node main.js" } }' > minimal-hello-world-node-js/package.json
+cf push rdemo-node -p minimal-hello-world-node-js
