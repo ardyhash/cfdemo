@@ -1,0 +1,104 @@
+#!/bin/bash
+# Cloudfoundry demo
+# This script is meant to serve as a demonstration of the cloudfoundry cli
+
+function Confirm { set +x; local thisReply=''
+confirmationText="$([ -z "$1" ] && printf "Are you sure you wish to proceed? (y or Y to confirm)" || printf "$1")"
+read -p "$confirmationText " -n 1 -r thisReply; printf "\n"
+if [[ $thisReply =~ ^[Yy]$ ]]; then set -x; return 0; else set -x; return 1; fi
+}
+
+# 0. Requirements
+## - Developer access to a Cloudfoundry installation
+## - Ubuntu (cygwin and GitBash may also work)
+## - Git CLI client
+
+Confirm "1. Install the CLI?" && {
+# 1. Install the cf cli tool
+## Add Key
+wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key \
+| sudo apt-key add -
+## Add repo
+echo "deb https://packages.cloudfoundry.org/debian stable main" \
+| sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+## Update
+sudo apt-get update
+## Install (v6)
+sudo apt-get install cf-cli
+}
+
+Confirm "2. Login to $1 ?" && {
+# 2. Login to cf site via cli
+cf login -a https://api.cfsite.com/
+}
+
+Confirm "3. Clone repositories of node applications?" && {
+# 3. Clone some repositories (nodejs buildpack)
+[ -d minimal-hello-world-node-js ] \
+&& { Confirm "Delete existing folder minimal-hello-world-node-js?" && rm -rf minimal-hello-world-node-js; } \
+|| git clone git@github.com:osipov/minimal-hello-world-node-js.git
+[ -d node-infopage ] \
+&& { Confirm "Delete existing folder node-infopage?" && rm -rf node-infopage; } \
+|| git clone git@github.com:BananaAcid/node-infopage.git
+}
+
+Confirm "4. Create simple applications?" && {
+# 4. Create some basic applications using different buildpacks
+## StaticFile Buildpack
+mkdir staticfile && touch staticfile/Staticfile && echo helloworld > staticfile/index.html
+## PHP Buildpack
+mkdir php && echo '<?php phpinfo(); ?>' > php/index.php
+}
+
+Confirm "5. Deploy applications?" && {
+# 5. Deploy applications
+cf push rdemo-phpinfo -p php
+cf push rdemo-staticfile -p staticfile
+cf push rdemo-node-infopage -p node-infopage
+}
+
+Confirm "6. Debug applications?" && {
+# 6. Debug Applications
+cf apps
+cf logs rdemo-node --recent
+cat minimal-hello-world-node-js/package.json
+rm minimal-hello-world-node-js/package.json
+echo '{ "main": "main.js", "scripts": { "start": "node main.js" } }' > minimal-hello-world-node-js/package.json
+cf push rdemo-node -p minimal-hello-world-node-js
+# One issue I faced while playing in the trial environment was
+# administrative restrictions. My trial environment was limited
+# to 4GB mem, 8GB disk, 400 services, 10 routes, and 20 instances
+# to we can use the following to view our utilization:
+cf apps # cf delete APPNAME
+cf services # cf delete-service SERVICEINSTANCENAME
+cf routes # cf delete-route DOMAINNAME --hostname HOSTNAME
+}
+
+Confirm "7. Scale applications?" && {
+# 7. Scale Application
+## Failure to scale
+cf scale rdemo-node -i 22
+cf scale rdemo-node -m 5G
+cf scale rdemo-node -k 10G
+## Vertical scaling down
+cf scale rdemo-node -m 64M -k 100M -f
+cf scale rdemo-phpinfo -m 64M -k 256M -f
+cf scale rdemo-staticfile -m 64M -k 100M -f
+cf scale rdemo-node-infopage -m 64M -k 100M -f
+## Horizontal scale up
+cf scale rdemo-node -i 5
+cf scale rdemo-phpinfo -i 5
+cf scale rdemo-staticfile -i 5
+cf scale rdemo-node-infopage -i 5
+}
+
+Confirm "8. Try out cft (CloudFoundryTools from rdscripts)?" && {
+# 8. rdscripts started as a collection of scripts
+#    Most of the scripts considered useful have been
+#    integrated into the cft (Cloudfoundry Tools) script
+git clone git@github.com:ardyhash/rdscripts.git
+## List all instance
+bash rdscripts/cft li .
+## List all buildpacks
+bash rdscripts/cft bp .
+}
